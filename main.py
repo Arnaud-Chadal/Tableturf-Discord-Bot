@@ -444,6 +444,5 @@ async def clash(ctx, card) :
     await ctx.channel.send(description)
 
 
-#MTExNDg0NjA2Njk1Nzg3NzI0OA.G_PCLB.nqsjbv3o6T3BmY3OtO76MF6Mav9HftVVDMCnWc Tableturf
-#MTExNzgyODgyODYyMzAzMjM3Mg.GChJdm.ercO74GL6B8aN6xKwVUYVQ4IP3n7StnP9OEMJM Tabletest
-client.run("MTExNzgyODgyODYyMzAzMjM3Mg.GChJdm.ercO74GL6B8aN6xKwVUYVQ4IP3n7StnP9OEMJM")
+
+client.run(#insert the app token)
