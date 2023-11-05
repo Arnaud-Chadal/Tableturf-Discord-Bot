@@ -417,32 +417,4 @@ async def test(ctx, ident) :
 
 
 
-
-#commandes combat :
-
-plateau = [0]
-deck = [0, 0, 0, 0]
-
-@client.command()
-async def deck(ctx, a, b, c, d) :
-    if a in data.principaux and b in data.principaux and c in data.principaux and d in data.principaux :
-        data.membre[5] = [a, b, c, d] #mettre ensuite le spécial et le secondaire qui correspond au principal
-    else : await ctx.channel.send("Les cartes ne correspondent pas à l'ordre demandé : Personnage/Arme/Arme/Arme")
-
-
-    
-@client.command()
-async def arena(ctx) :
-    global deck
-    description=":black_large_square:"+data.carte[deck[0]][3]+":black_large_square:\n"+data.carte[deck[1]][3]+data.carte[deck[2]][3]+data.carte[deck[3]][3]+"\n\n"+data.carte[deck[1]][3]+data.carte[deck[2]][3]+data.carte[deck[3]][3]+"\n:black_large_square:"+data.carte[deck[0]][3]+":black_large_square:"+"ererer"
-    await ctx.channel.send(description)
-
-
-@client.command()
-async def clash(ctx, card) :
-    global deck
-    await ctx.channel.send(description)
-
-
-
 client.run(#insert the app token)
