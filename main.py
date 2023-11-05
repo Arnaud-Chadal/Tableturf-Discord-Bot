@@ -14,12 +14,7 @@ data.membre = pickle.load(open("membre.dat", "rb"))
 
 
 client = commands.Bot(command_prefix=">", intents=discord.Intents.all())
-a = discord.Embed(
-        colour=2935808,
-        title="- Liste des commandes de Tableturf -",
-        description=">claim : récupère des objets toutes les deux heures\n>roll : tire une carte aléatoire\n>shop : ouvre la boutique de Kipik\n>buy [item] : achète des objets\n>pack : ouvre tes packs de cartes\n>info : consulte ton profil et ton inventaire\n>card [rareté] [membre] : affiche la liste de tes cartes\n>top : Affiche le classement\n>see [carte] [membre]: Affiche une carte choisie\n>trade [membre] [carte1] [carte2] : Permet d'échanger une carte avec quelqu'un\n>ok : Permet d'accepter un échange")
-a.set_author(name="Tableturf")
-a.set_thumbnail(url="https://cdn.discordapp.com/attachments/779442974357585920/1117485781943066754/lun._5_06_2023_22_20_53.png")
+
 
 s = discord.Embed(
         colour=5505218,
