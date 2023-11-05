@@ -285,13 +285,6 @@ async def pack(ctx) :
             embed_list.append(embed)
         await arrows(ctx, embed_list)
     else : await ctx.channel.send("Tu n'as aucun pack à ouvrir...")
-    
-
-
-@client.command()
-async def aide(ctx) :
-    global a
-    await ctx.message.channel.send(embed=a)
 
 
     
