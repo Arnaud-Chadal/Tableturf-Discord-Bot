@@ -18,7 +18,7 @@ client = commands.Bot(command_prefix=">", intents=discord.Intents.all())
 
 s = discord.Embed(
         colour=5505218,
-        title="Stock de Tipik",
+        title="Stock de Kipik",
         description="Pack de cartes C&T (pack) : 25 fragments\nPack C&T classe (freshpack) : 60 fragments\n\nPour acheter un article : >buy + nom de l'article (celui entre paranthèses)")
 s.set_author(name="Tipik")
 s.set_image(url="https://cdn.discordapp.com/attachments/779442974357585920/1116454436529778738/S3_Banner_1003.png")
@@ -68,6 +68,12 @@ async def on_message(message):
 @client.command()
 @commands.cooldown(1, 3, commands.BucketType.user)
 async def roll(ctx) :
+    '''
+    Permet de tirer une carte en utilisant une conque
+    Taux de chances : commune : 89%, rare : 10%, classe : 1%
+
+    Syntaxe : >roll
+    '''
     if data.membre[str(ctx.author.id)][0] > 0 :
         data.membre[str(ctx.author.id)][0] -= 1
         n = randint(1, 100)
@@ -105,9 +111,15 @@ async def roll(ctx) :
 
 @client.command()
 async def info(ctx, identid=None) :
+    '''
+    Permet de voir vos infos (conques, fragments, cartes, etc...)
+    Syntaxe : >info + identifiant du membre (facultatif, sert à voir les infos d'un autre membre)
+    '''
+    print(identid)
     if identid == None :
         identid = str(ctx.author.id)
     else : identid = str(identid[2:-1])
+    print(identif)
     embed_list = []
     com_list = []
     rar_list = []
@@ -131,6 +143,10 @@ async def info(ctx, identid=None) :
 
 @client.command()
 async def card(ctx, rare, identid=None) :
+    '''
+    Permet de voir les cartes qu'un membre possède, vous pouvez choisir la rareté (commune, rare, classe, all) et l'identifiant de la personne dont vous voulez voir les cartes
+    Syntaxe : >card + rareté des cartes à afficher (0 : commune, 1 : rare, 2 : classe, all : toutes) + identifiant du membre (facultatif, sert à voir les cartes d'un autre membre)
+    '''
     if identid == None :
         identid = str(ctx.author.id)
     else : identid = str(identid[2:-1])
@@ -156,6 +172,10 @@ async def card(ctx, rare, identid=None) :
 @client.command()
 @commands.cooldown(1, 3600, commands.BucketType.user)
 async def claim(ctx) :
+    '''
+    Permet de réclamer une conque toutes les heures
+    Syntaxe : >claim
+    '''
     nbr = randint(1, 100)
     if nbr < 2 :
         data.membre[str(ctx.message.author.id)][4] += 1
@@ -186,12 +206,20 @@ async def claim(ctx) :
 
 @client.command()
 async def shop(ctx) :
+    '''
+    Permet de voir les articles disponibles à l'achat au shop de Kipik
+    Syntaxe : >shop
+    '''
     global s
     await ctx.message.channel.send(embed=s)
 
 
 @client.command()
 async def buy(ctx, item) :
+    '''
+    Permet d'acheter un article au shop de Kipik
+    Syntaxe : >buy + nom de l'article (celui entre paranthèses)
+    '''
     if item == "pack" :
         if data.membre[str(ctx.message.author.id)][1] >= 25 :
             data.membre[str(ctx.message.author.id)][1] -= 25
@@ -231,7 +259,10 @@ async def buy(ctx, item) :
 
 @client.command()
 async def pack(ctx) :
-    '''commande qui sert à boire de l'eau'''
+    '''
+    Permet d'ouvrir un pack de cartes C&T qui se trouve dans votre inventaire
+    Syntaxe : >pack
+    '''
     var = False
     embed_list = []
     liste = []
@@ -297,6 +328,10 @@ async def give(ctx, ident, obj, info) :
  
 @client.command()
 async def top(ctx):
+    '''
+    Permet de voir le classement des membres du serveur
+    Syntaxe : >top
+    '''
     carte_liste = []
     key_list = list(data.membre.keys())
     print(key_list)
@@ -319,17 +354,19 @@ async def top(ctx):
         colour=14730752,
         title=titre,
         description="Tu es top " + str(t) + " !\nSi tu es premier du classement tu as le droit à un rôle spécial, n'hésite pas à le demander !")
-    print("rerer")
     s.set_author(name="Classement des membres du serveur :")
     s.set_image(url="https://cdn.discordapp.com/attachments/779442974357585920/1123938242841026560/S3_Banner_10001.png")
     s.set_thumbnail(url="https://cdn.discordapp.com/attachments/779442974357585920/1123937911017066567/S3_Badge_Level_999.png")
-    print("erer")
     await ctx.channel.send(embed=s)
     
 
 
 @client.command()
 async def see(ctx, idcarte, identid=None) :
+    '''
+    Permet de voir une carte en particulier et de savoir si un membre possède cette carte
+    Syntaxe : >see + id de la carte + identifiant du membre (facultatif, sert à vérifier si un membre possède la carte)
+    '''
     nbr = int(idcarte) - 1
     if identid == None :
         if nbr > -1 and nbr < 209 :
@@ -351,6 +388,10 @@ async def see(ctx, idcarte, identid=None) :
 
 @client.command()
 async def trade(ctx, identid, card1, card2) :
+    '''
+    Permet d'échanger une carte avec un autre membre
+    Syntaxe : >trade + identifiant du membre avec qui vous voulez échanger + id de la carte que vous voulez donner + id de la carte que vous voulez obtenir
+    '''
     global trading
     if trading == False :
         if int(card1)-1 in data.membre[str(ctx.author.id)][2] and int(card2)-1 in data.membre[identid[2:-1]][2] :
@@ -365,6 +406,10 @@ async def trade(ctx, identid, card1, card2) :
 
 @client.command()
 async def ok(ctx) :
+    '''
+    Permet d'accepter un échange lorsqu'un autre membre vous en propose un
+    Syntaxe : >ok
+    '''
     global trading
     print(trading)
     if trading == False :
@@ -384,6 +429,10 @@ async def ok(ctx) :
 
 @client.command()
 async def nope(ctx) :
+    '''
+    Permet de refuser un échange lorsqu'un autre membre vous en propose un
+    Syntaxe : >nope
+    '''
     global trading
     print(trading)
     if trading == False :
@@ -397,6 +446,9 @@ async def nope(ctx) :
 
 @client.command()
 async def test(ctx, ident) :
+    '''
+    Permet
+    '''
     ident = int(ident)-1
     print(ident)
     await ctx.channel.send(data.carte[ident][3] + " : " + data.carte[ident][1])
@@ -405,4 +457,4 @@ async def test(ctx, ident) :
 
 
 
-client.run(#insert the app token)
+client.run("MTExNzgyODgyODYyMzAzMjM3Mg.Gj3y6t.aTLOCVmxO3MXkpb2rcumkjlXPI0uLe_YTO2oHw")
