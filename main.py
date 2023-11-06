@@ -457,4 +457,4 @@ async def test(ctx, ident) :
 
 
 
-client.run("MTExNzgyODgyODYyMzAzMjM3Mg.Gj3y6t.aTLOCVmxO3MXkpb2rcumkjlXPI0uLe_YTO2oHw")
+client.run("insert app token here")
