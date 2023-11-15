@@ -1,11 +1,12 @@
 import discord
 from discord.ext import commands
-import data
 from random import randint
 import pickle
 from os import path
 from dpytools.menus import arrows
 import time
+
+import data
 
 
 if not path.isfile("membre.dat") :
@@ -49,7 +50,7 @@ async def on_message(message):
             print("un membre est maintenant enregistré")
         if not "$" in message.content.lower() and not ">" in message.content.lower() :
             hour, min = map(int, time.strftime("%H %M").split())
-            if min > data.membre[str(message.author.id)][5] + 3 or min < data.membre[str(message.author.id)][5] :
+            if min > data.membre[str(message.author.id)][5] + 5 or min < data.membre[str(message.author.id)][5] :
                 nbr = randint(1, 60)
                 if nbr < 3 :
                     data.membre[str(message.author.id)][5] = min
@@ -66,7 +67,7 @@ async def on_message(message):
 
 
 @client.command()
-@commands.cooldown(1, 3, commands.BucketType.user)
+@commands.cooldown(1, 2, commands.BucketType.user)
 async def roll(ctx) :
     '''
     Permet de tirer une carte en utilisant une conque
@@ -115,27 +116,24 @@ async def info(ctx, identid=None) :
     Permet de voir vos infos (conques, fragments, cartes, etc...)
     Syntaxe : >info + identifiant du membre (facultatif, sert à voir les infos d'un autre membre)
     '''
-    print(identid)
     if identid == None :
-        identid = str(ctx.author.id)
-    else : identid = str(identid[2:-1])
-    print(identif)
-    embed_list = []
-    com_list = []
-    rar_list = []
-    cla_list = []
+        identid = int(str(ctx.author.id))
+    else : identid = int(identid[2:-1])
+    com_list = 0
+    rar_list = 0
+    cla_list = 0
     for i in data.membre[str(identid)][2] :
         if data.carte[i][2] == 0 :
-            com_list.append(i)
+            com_list += 1
         if data.carte[i][2] == 1 :
-            rar_list.append(i)
+            rar_list += 1
         if data.carte[i][2] == 2 :
-            cla_list.append(i)
+            cla_list += 1
     embed = discord.Embed(
         colour=7929821,
         title="Tu possèdes :",
-        description= str(data.membre[str(ctx.author.id)][0]) + " conques\n" + str(data.membre[str(ctx.author.id)][1]) + " fragments\n" + str(data.membre[str(ctx.author.id)][3]) + " pack de cartes C&T\n" + str(data.membre[str(ctx.author.id)][4]) + " pack C&T classe\n\n" + str(len(com_list)) + " /133 cartes communes\n" + str(len(rar_list)) + " /61 cartes rares\n" + str(len(cla_list)) + " /15 cartes classes\n" + "***" + str(len(data.membre[str(ctx.author.id)][2])) + "/209 cartes***")
-    embed.set_author(name=str(ctx.author))
+        description= str(data.membre[str(identid)][0]) + " conques\n" + str(data.membre[str(identid)][1]) + " fragments\n" + str(data.membre[str(identid)][3]) + " pack de cartes C&T\n" + str(data.membre[str(identid)][4]) + " pack C&T classe\n\n" + str(com_list) + " /133 cartes communes\n" + str(rar_list) + " /61 cartes rares\n" + str(cla_list) + " /15 cartes classes\n" + "***" + str(len(data.membre[str(identid)][2])) + "/209 cartes***")
+    embed.set_author(name=str(client.get_user(identid)))
     embed.set_thumbnail(url=ctx.message.author.avatar)
     embed.set_image(url="https://cdn.discordapp.com/attachments/779442974357585920/1116087617709166733/S3_Banner_1002.png")
     await ctx.channel.send(embed=embed)
@@ -252,9 +250,6 @@ async def buy(ctx, item) :
         else : await ctx.message.channel.send("Tu n'as pas assez de fragments...") 
     else : await ctx.channel.send("Cet article n'existe pas... Utilise >shop pour connaître la liste des articles !") 
         
-        
-
-# #banniere, badges
 
 
 @client.command()
@@ -457,4 +452,4 @@ async def test(ctx, ident) :
 
 
 
-client.run("insert app token here")
+client.run("MTExNzgyODgyODYyMzAzMjM3Mg.G5rK-_.aQCkJNBSINEOwBpJaqi5f5iRLv7esNjq0_WSrk")
