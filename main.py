@@ -7,15 +7,16 @@ from dpytools.menus import arrows
 import time
 
 import data
+import functions
 
 
-if not path.isfile("membre.dat") :
-    pickle.dump(data.membre, open("membre.dat", "wb"))
-data.membre = pickle.load(open("membre.dat", "rb"))
+#================================================================
+#                       Variables Creation                       
+#================================================================
 
 
 client = commands.Bot(command_prefix=">", intents=discord.Intents.all())
-
+trading = False
 
 s = discord.Embed(
         colour=5505218,
@@ -25,9 +26,15 @@ s.set_author(name="Tipik")
 s.set_image(url="https://cdn.discordapp.com/attachments/779442974357585920/1116454436529778738/S3_Banner_1003.png")
 s.set_thumbnail(url="https://cdn.discordapp.com/attachments/779442974357585920/1116454209756340334/S3_Tableturf_Card_Spyke.png")
 
-trading = False
+
+if not path.isfile("membre.dat") :
+    pickle.dump(data.membre, open("membre.dat", "wb"))
+data.membre = pickle.load(open("membre.dat", "rb"))
 
 
+#================================================================
+#                           Bot Events                           
+#================================================================
 
 @client.event
 async def on_ready() :
@@ -64,6 +71,11 @@ async def on_message(message):
                     embed.set_thumbnail(url="https://cdn.wikimg.net/en/splatoonwiki/images/0/05/S3_icon_conch_shell.png")
                     await message.channel.send(embed=embed)
     await client.process_commands(message)
+
+
+#================================================================
+#                          User Commands                         
+#================================================================
 
 
 @client.command()
@@ -109,7 +121,6 @@ async def roll(ctx) :
     else : await ctx.channel.send("Tu n'a plus de conques...")
 
 
-
 @client.command()
 async def info(ctx, identid=None) :
     '''
@@ -123,19 +134,19 @@ async def info(ctx, identid=None) :
     rar_list = 0
     cla_list = 0
     for i in data.membre[str(identid)][2] :
-        if data.carte[i][2] == 0 :
-            com_list += 1
-        if data.carte[i][2] == 1 :
-            rar_list += 1
-        if data.carte[i][2] == 2 :
-            cla_list += 1
-    embed = discord.Embed(
-        colour=7929821,
-        title="Tu possèdes :",
-        description= str(data.membre[str(identid)][0]) + " conques\n" + str(data.membre[str(identid)][1]) + " fragments\n" + str(data.membre[str(identid)][3]) + " pack de cartes C&T\n" + str(data.membre[str(identid)][4]) + " pack C&T classe\n\n" + str(com_list) + " /133 cartes communes\n" + str(rar_list) + " /61 cartes rares\n" + str(cla_list) + " /15 cartes classes\n" + "***" + str(len(data.membre[str(identid)][2])) + "/209 cartes***")
-    embed.set_author(name=str(client.get_user(identid)))
-    embed.set_thumbnail(url=ctx.message.author.avatar)
-    embed.set_image(url="https://cdn.discordapp.com/attachments/779442974357585920/1116087617709166733/S3_Banner_1002.png")
+        match data.carte[i][2] :
+            case 0 :
+                com_list += 1
+            case 1 :
+                rar_list += 1
+            case 2 :
+                cla_list += 1        
+    embed = functions.makeEmbed(7929821,
+                                "Tu possèdes :",
+                                str(data.membre[str(identid)][0]) + " conques\n" + str(data.membre[str(identid)][1]) + " fragments\n" + str(data.membre[str(identid)][3]) + " pack de cartes C&T\n" + str(data.membre[str(identid)][4]) + " pack C&T classe\n\n" + str(com_list) + " /133 cartes communes\n" + str(rar_list) + " /61 cartes rares\n" + str(cla_list) + " /15 cartes classes\n" + "***" + str(len(data.membre[str(identid)][2])) + "/209 cartes***",
+                                str(client.get_user(identid)),
+                                "https://cdn.discordapp.com/attachments/779442974357585920/1116087617709166733/S3_Banner_1002.png",
+                                ctx.message.author.avatar)
     await ctx.channel.send(embed=embed)
 
 
@@ -201,7 +212,6 @@ async def claim(ctx) :
     await ctx.channel.send(embed=embed)
 
     
-
 @client.command()
 async def shop(ctx) :
     '''
@@ -250,7 +260,6 @@ async def buy(ctx, item) :
         else : await ctx.message.channel.send("Tu n'as pas assez de fragments...") 
     else : await ctx.channel.send("Cet article n'existe pas... Utilise >shop pour connaître la liste des articles !") 
         
-
 
 @client.command()
 async def pack(ctx) :
@@ -307,7 +316,6 @@ async def pack(ctx) :
         await arrows(ctx, embed_list)
     else : await ctx.channel.send("Tu n'as aucun pack à ouvrir...")
 
-
     
 @client.command()
 async def give(ctx, ident, obj, info) :
@@ -317,8 +325,7 @@ async def give(ctx, ident, obj, info) :
             data.membre[ident][2].append(info)
         else : await ctx.channel.send("Ce membre possède déjà cette carte...")  
     else : data.membre[ident][int(obj)] += int(info)
-    pickle.dump(data.membre, open("membre.dat", "wb"))
-    
+    pickle.dump(data.membre, open("membre.dat", "wb"))   
  
  
 @client.command()
@@ -353,7 +360,6 @@ async def top(ctx):
     s.set_image(url="https://cdn.discordapp.com/attachments/779442974357585920/1123938242841026560/S3_Banner_10001.png")
     s.set_thumbnail(url="https://cdn.discordapp.com/attachments/779442974357585920/1123937911017066567/S3_Badge_Level_999.png")
     await ctx.channel.send(embed=s)
-    
 
 
 @client.command()
@@ -380,7 +386,6 @@ async def see(ctx, idcarte, identid=None) :
         else : await ctx.channel.send(str(client.get_user(int(identid[2:-1]))) + " ne possède pas la carte " + data.carte[nbr][1])
 
 
-
 @client.command()
 async def trade(ctx, identid, card1, card2) :
     '''
@@ -396,7 +401,6 @@ async def trade(ctx, identid, card1, card2) :
             else : await ctx.channel.send("L'un de vous possède déjà la carte que tu proposes d'échanger...")
         else : await ctx.channel.send("L'un de vous ne possède pas la carte demandée...")   
     else : await ctx.channel.send("Un échange est déjà en cours, merci de patienter.")
-
 
 
 @client.command()
@@ -437,19 +441,11 @@ async def nope(ctx) :
     else :
         trading = False
         await ctx.channel.send("L'échange a été annulé...")
-
-
-@client.command()
-async def test(ctx, ident) :
-    '''
-    Permet
-    '''
-    ident = int(ident)-1
-    print(ident)
-    await ctx.channel.send(data.carte[ident][3] + " : " + data.carte[ident][1])
     
 
+#================================================================
+#                             Token                           
+#================================================================
 
 
-
-client.run("MTExNzgyODgyODYyMzAzMjM3Mg.G5rK-_.aQCkJNBSINEOwBpJaqi5f5iRLv7esNjq0_WSrk")
+client.run("MTExNDg0NjA2Njk1Nzg3NzI0OA.GX0NEJ.tENUlkdtJc0LU8A5ljJ6ylGpq15DqRQ_DqTWBI")
