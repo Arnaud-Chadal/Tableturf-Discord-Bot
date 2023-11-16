@@ -448,4 +448,4 @@ async def nope(ctx) :
 #================================================================
 
 
-client.run("MTExNDg0NjA2Njk1Nzg3NzI0OA.GX0NEJ.tENUlkdtJc0LU8A5ljJ6ylGpq15DqRQ_DqTWBI")
+client.run("MTExNzgyODgyODYyMzAzMjM3Mg.GA7m3D.MN_20cOxC7XJVwnspdKUFFL0UXkI9KAUmXUkfE")
